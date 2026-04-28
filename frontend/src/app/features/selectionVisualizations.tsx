@@ -127,7 +127,7 @@ export default function GenerateSelectionVisualization({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row gap-3 items-center border-2 border-[var(--accent-1)] p-2 rounded">
-      <h1>Selection Visualization</h1>
+      <h1>Feature to visualize:</h1>
 
       <select
         className="border-2 border-[var(--accent-3)] p-1 rounded"

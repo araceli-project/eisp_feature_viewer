@@ -4,12 +4,9 @@ export enum ColorSchemeType {
   Categorical = "categorical",
   Sequential = "sequential",
 }
-export const colorSchemes: Record<ColorSchemeType, readonly string[]> = {
+export const colorSchemes: Record<ColorSchemeType, any> = {
   [ColorSchemeType.Categorical]: ["#ffb549", "#702aee", ...d3.schemeTableau10],
-  [ColorSchemeType.Sequential]: d3.quantize(
-    d3.interpolateRgb("#f7fbff", "#702aee"),
-    10,
-  ),
+  [ColorSchemeType.Sequential]: d3.interpolateRgb("#f7fbff", "#702aee")
 };
 
 export const ColorTypeForProxyTask: Record<string, ColorSchemeType> = {
@@ -63,7 +60,7 @@ export function getColorForValue(
   value_order: string[],
   schemeType: ColorSchemeType = ColorSchemeType.Categorical,
 ): string {
-  const scheme = colorSchemes[schemeType];
+  const scheme = schemeType === ColorSchemeType.Sequential ? d3.quantize(colorSchemes[schemeType], value_order.length) : colorSchemes[schemeType];
   const index = value_order.indexOf(value);
   const safeIndex = index >= 0 ? index : 0;
   return scheme[safeIndex % scheme.length];
