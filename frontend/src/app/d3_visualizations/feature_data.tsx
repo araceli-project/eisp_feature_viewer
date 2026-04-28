@@ -1,4 +1,9 @@
 import * as d3 from "d3";
+import {
+  ColorTypeForProxyTask,
+  getColorForValue,
+  getLabelOrderForProxyTask,
+} from "./proxy_colors";
 
 export type FeaturePoint = [number, number];
 
@@ -49,6 +54,12 @@ export function renderFeatureData(
       )
     : [];
   const labelDomain = Array.from(new Set(labels));
+  const labelOrder = colorByProxyTaskName
+    ? getLabelOrderForProxyTask(colorByProxyTaskName, labelDomain)
+    : [];
+  const colorSchemeType = colorByProxyTaskName
+    ? ColorTypeForProxyTask[colorByProxyTaskName]
+    : undefined;
 
   const width = options.width ?? 720;
   const height = options.height ?? 480;
@@ -74,11 +85,6 @@ export function renderFeatureData(
     .domain(yExtent)
     .nice()
     .range([height - margin.bottom, margin.top]);
-
-  const colorScale = d3
-    .scaleOrdinal<string, string>()
-    .domain(labelDomain)
-    .range(d3.schemeTableau10);
 
   const imageFiles = Array.from(images).sort((a, b) =>
     a.name.localeCompare(b.name),
@@ -177,7 +183,7 @@ export function renderFeatureData(
         colorByValues && index < colorByValues.length
           ? String(colorByValues[index])
           : "Unknown Coloring";
-      return colorScale(label);
+      return getColorForValue(label, labelOrder, colorSchemeType);
     })
     .attr("fill-opacity", 0.75)
     .attr("data-brushed", "false")
@@ -294,7 +300,9 @@ export function renderFeatureData(
       .attr("r", 5)
       .attr("cx", 5)
       .attr("cy", 0)
-      .attr("fill", (label) => colorScale(label));
+      .attr("fill", (label) =>
+        getColorForValue(label, labelOrder, colorSchemeType),
+      );
 
     legendItems
       .append("text")

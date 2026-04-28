@@ -1,5 +1,10 @@
 import * as d3 from "d3";
 import type { FeatureData, RenderFeatureDataOptions } from "./feature_data";
+import {
+  ColorTypeForProxyTask,
+  getColorForValue,
+  getLabelOrderForProxyTask,
+} from "./proxy_colors";
 
 export function multipleDataBarChart(
   featureData: FeatureData,
@@ -29,6 +34,19 @@ export function multipleDataBarChart(
       count,
     }))
     .filter((d) => d.label !== "no_faces");
+  const labelOrder = getLabelOrderForProxyTask(
+    proxyTaskName,
+    data.map(({ label }) => label),
+  );
+  const colorSchemeType = ColorTypeForProxyTask[proxyTaskName];
+  const labelOrderIndex = new Map(
+    labelOrder.map((label, index) => [label, index]),
+  );
+  const orderedData = [...data].sort(
+    (a, b) =>
+      (labelOrderIndex.get(a.label) ?? Number.MAX_SAFE_INTEGER) -
+      (labelOrderIndex.get(b.label) ?? Number.MAX_SAFE_INTEGER),
+  );
 
   const width = options.width ?? 400;
   const height = options.height ?? 300;
@@ -38,26 +56,36 @@ export function multipleDataBarChart(
 
   const x = d3
     .scaleBand()
-    .domain(data.map((d) => d.label))
+    .domain(orderedData.map((d) => d.label))
     .range([margin.left, width - margin.right])
     .padding(0.1);
 
   const y = d3
     .scaleLinear()
-    .domain([0, d3.max(data, (d) => d.count) ?? 0])
+    .domain([0, d3.max(orderedData, (d) => d.count) ?? 0])
     .nice()
     .range([height - margin.bottom, margin.top]);
 
   svg
     .append("g")
     .selectAll("rect")
-    .data(data)
+    .data(orderedData)
     .join("rect")
-    .attr("x", (d) => x(d.label)!)
+    .attr("x", (d) => {
+      const xValue = x(d.label);
+      if (xValue === undefined) {
+        throw new Error(
+          `Label "${d.label}" could not be mapped to the x axis.`,
+        );
+      }
+      return xValue;
+    })
     .attr("y", (d) => y(d.count))
     .attr("height", (d) => y(0) - y(d.count))
     .attr("width", x.bandwidth())
-    .attr("fill", (_, i) => d3.schemeCategory10[i % 10]);
+    .attr("fill", (d) =>
+      getColorForValue(d.label, labelOrder, colorSchemeType),
+    );
 
   svg
     .append("g")
@@ -103,6 +131,19 @@ export function multipleDataPieChart(
       count,
     }))
     .filter((d) => d.label !== "no_faces");
+  const labelOrder = getLabelOrderForProxyTask(
+    proxyTaskName,
+    data.map(({ label }) => label),
+  );
+  const colorSchemeType = ColorTypeForProxyTask[proxyTaskName];
+  const labelOrderIndex = new Map(
+    labelOrder.map((label, index) => [label, index]),
+  );
+  const orderedData = [...data].sort(
+    (a, b) =>
+      (labelOrderIndex.get(a.label) ?? Number.MAX_SAFE_INTEGER) -
+      (labelOrderIndex.get(b.label) ?? Number.MAX_SAFE_INTEGER),
+  );
 
   const width = options.width ?? 400;
   const height = options.height ?? 300;
@@ -114,7 +155,7 @@ export function multipleDataPieChart(
     Math.min(width, height) / 2 - Math.max(...Object.values(margin));
 
   const pie = d3.pie<{ label: string; count: number }>().value((d) => d.count);
-  const arcs = pie(data);
+  const arcs = pie(orderedData);
 
   const arcGenerator = d3
     .arc<d3.PieArcDatum<{ label: string; count: number }>>()
@@ -133,7 +174,9 @@ export function multipleDataPieChart(
     .data(arcs)
     .join("path")
     .attr("d", arcGenerator)
-    .attr("fill", (_, i) => d3.schemeCategory10[i % 10]);
+    .attr("fill", (d) =>
+      getColorForValue(d.data.label, labelOrder, colorSchemeType),
+    );
 
   g.selectAll(".slice-label")
     .data(arcs)
