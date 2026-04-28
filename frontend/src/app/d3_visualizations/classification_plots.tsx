@@ -4,6 +4,7 @@ import {
   ColorTypeForProxyTask,
   getColorForValue,
   getLabelOrderForProxyTask,
+  getReadableTextColor,
 } from "./proxy_colors";
 
 // Bar chart showing the count of points in each class for a selected proxy task, based on the selected points in the scatter plot.
@@ -192,7 +193,11 @@ export function classificationPieChart(
     .attr("transform", (d) => `translate(${labelArcGenerator.centroid(d)})`)
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
-    .attr("fill", "#ffffff")
+    .attr("fill", (d) =>
+      getReadableTextColor(
+        getColorForValue(d.data.label, labelOrder, colorSchemeType),
+      ),
+    )
     .attr("font-size", 11)
     .text((d) => d.data.label);
 

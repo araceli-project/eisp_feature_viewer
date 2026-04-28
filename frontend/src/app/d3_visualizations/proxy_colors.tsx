@@ -5,8 +5,11 @@ export enum ColorSchemeType {
   Sequential = "sequential",
 }
 export const colorSchemes: Record<ColorSchemeType, readonly string[]> = {
-  [ColorSchemeType.Categorical]:["#ffb549", "#702aee", ...d3.schemeTableau10],
-  [ColorSchemeType.Sequential]: d3.schemeOrRd[9],
+  [ColorSchemeType.Categorical]: ["#ffb549", "#702aee", ...d3.schemeTableau10],
+  [ColorSchemeType.Sequential]: d3.quantize(
+    d3.interpolateRgb("#f7fbff", "#702aee"),
+    10,
+  ),
 };
 
 export const ColorTypeForProxyTask: Record<string, ColorSchemeType> = {
@@ -64,4 +67,14 @@ export function getColorForValue(
   const index = value_order.indexOf(value);
   const safeIndex = index >= 0 ? index : 0;
   return scheme[safeIndex % scheme.length];
+}
+
+export function getReadableTextColor(backgroundColor: string): string {
+  const rgb = d3.color(backgroundColor)?.rgb();
+  if (!rgb) {
+    return "#ffffff";
+  }
+
+  const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+  return brightness >= 160 ? "#000000" : "#ffffff";
 }

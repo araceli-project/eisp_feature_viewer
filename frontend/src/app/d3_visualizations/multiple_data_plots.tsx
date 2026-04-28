@@ -4,6 +4,7 @@ import {
   ColorTypeForProxyTask,
   getColorForValue,
   getLabelOrderForProxyTask,
+  getReadableTextColor,
 } from "./proxy_colors";
 
 export function multipleDataBarChart(
@@ -185,7 +186,11 @@ export function multipleDataPieChart(
     .attr("transform", (d) => `translate(${labelArcGenerator.centroid(d)})`)
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
-    .attr("fill", "#ffffff")
+    .attr("fill", (d) =>
+      getReadableTextColor(
+        getColorForValue(d.data.label, labelOrder, colorSchemeType),
+      ),
+    )
     .attr("font-size", 11)
     .text((d) => d.data.label);
 
