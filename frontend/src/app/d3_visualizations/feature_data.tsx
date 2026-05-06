@@ -157,16 +157,6 @@ export function renderFeatureData(
   const brushLayer = plotLayer.append("g").attr("class", "brush-layer");
   const pointsLayer = plotLayer.append("g").attr("class", "points-layer");
 
-  plotLayer
-    .append("g")
-    .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(xScale));
-
-  plotLayer
-    .append("g")
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(yScale));
-
   const circles = pointsLayer
     .selectAll("circle")
     .data(pointData)
@@ -386,16 +376,6 @@ export function renderSelectedFeatureData(
 
   const plotLayer = svg.append("g").attr("class", "plot-layer");
   const pointsLayer = plotLayer.append("g").attr("class", "points-layer");
-
-  plotLayer
-    .append("g")
-    .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(xScale));
-
-  plotLayer
-    .append("g")
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(yScale));
 
   pointsLayer
     .selectAll("circle")

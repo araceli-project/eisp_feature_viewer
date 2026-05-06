@@ -143,7 +143,7 @@ export default function GenerateSelectionVisualization({
 
       </div>
       <div className="flex flex-row gap-3 items-center border-2 border-[var(--accent-2)] p-2 rounded">
-        <h3>Filter:</h3>
+        <h3>Filter by:</h3>
       <select
         className="border-2 border-[var(--accent-3)] p-1 rounded"
         value={filterProxyTask}

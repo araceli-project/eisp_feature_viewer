@@ -63,33 +63,37 @@ export default function GenerateFeatureVisualization({
         Feature Visualization
       </h1>
     <div className="py-2 flex flex-row items-center justify-center gap-4">
-      <div>
-      <label htmlFor="proxyTaskSelect">Select Proxy Task: </label>
-      <select
-        id="proxyTaskSelect"
-        value={proxyTaskName}
-        onChange={(e) => setProxyTaskName(e.target.value)}
-      >
-        {featureData.proxy_tasks_names
-          .filter((name) => featureData.features[name][0].length === 2)
-          .map((name) => (
+      <div className="flex flex-col items-center justify-center gap-2">
+        <div className="flex flex-row text-sm text-center sm:text-left items-center justify-center border-2 border-[var(--accent-1)] rounded p-2">
+        <select
+          id="proxyTaskSelect"
+          value={proxyTaskName}
+          onChange={(e) => setProxyTaskName(e.target.value)}
+        >
+          {featureData.proxy_tasks_names
+            .filter((name) => featureData.features[name][0].length === 2)
+            .map((name) => (
+              <option key={name} value={name}>
+                View by {name}
+              </option>
+            ))}
+        </select>
+
+      </div>
+      <div className="flex flex-row text-sm text-center sm:text-left border-2 border-[var(--accent-2)] rounded p-2 my-2">
+        <select
+          id="colorByProxyTaskSelect"
+          value={colorByProxyTaskName}
+          onChange={(e) => setColorByProxyTaskName(e.target.value)}
+        >
+          <option value="">No Color Grouping</option>
+          {Object.keys(featureData.classification_results).map((name) => (
             <option key={name} value={name}>
-              {name}
+              Color by {name}
             </option>
           ))}
-      </select>
-      <select
-        id="colorByProxyTaskSelect"
-        value={colorByProxyTaskName}
-        onChange={(e) => setColorByProxyTaskName(e.target.value)}
-      >
-        <option value="">No Color Grouping</option>
-        {Object.keys(featureData.classification_results).map((name) => (
-          <option key={name} value={name}>
-            Color by {name}
-          </option>
-        ))}
-      </select>
+        </select>
+      </div>
 
       <div id="feature-visualization" style={{ marginTop: "20px" }}></div>
 
