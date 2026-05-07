@@ -1,0 +1,50 @@
+# EISP Feature Viewer
+
+## Running
+
+### Frontend
+
+To run the frontend you only need to run the following command in the frontend repository:
+
+```bash
+bun run dev
+```
+
+### Backend
+
+To run the backend you only need to run the following command in the backend repository:
+
+```bash
+uv run fastapi dev ./src/main.py
+```
+
+## How to use
+
+### Analyze Features
+
+The Analyze Features section is used to explore the feature data extracted from selected images and, if a CSAI classification model was previously trained, to explain how it used the Proxy Tasks features to classify the image.
+
+First, you need to select a directory containing the images for analysis. You can overwrite the CSAI model name if you wish, as informed in the Train Model section, but the last trained model will be stored in the browser and be the default. Afterwards, you can click on Analyze Features to extract all information from the images using 7 models, or click on Restore Last Feature Data to restore the last analysis, and continue the exploration.
+
+The models available at the Backend are, as of now, a model for the Nudity Classification task, a model for Pose detection, a model for Object detection, a model for Scene Classification trained on Places, a model for Scene Classification trained with few-shot techniques, a model for Age and Perceived Gender prediction, and a model for ITA Skin Tone calculation.
+
+After the analysis result is ready, you will see a scatter plot of the TSNE-processed features of the images. You can select which model features to visualize, or select Concatenated to use all of them. You can also select which result to use for point coloring, however you can only select results with one value per image (such as Nudity or Scene), and not results with multiple data (such as Object detection or Age).
+
+Below the scatter plot you can see other plots containing general information. You can select which result to visualize, and also a filter to apply, in which you select a feature and a value, and only images which contain that value will be used for the visualizations. There are 3 plots, one bar plot containing the number of occurrences of each value across the images, a pie plot to visualize proportion between number of occurrences, and a SHAP values plot showing which features were more important for the inference of this collection of images by the CSAI model, if available.
+
+Finally, if you select points with the brush at the scatter plot, a second visualization will appear at its right. It is similar to the plots containing general information, but it only refers to the points you selected. It also contains a scatter plot for the selected feature, so that you can compare where the previously selected point appears in the scatter plot of other feature spaces.
+
+### Train Model
+
+The Train Model section is used to train a model for CSAI classification. You need to select a directory with the images to train the model, and a JSON file with a list of labels with the same size as the number of images. An example of label JSON is the following:
+
+```json
+[
+    true, 
+    false, 
+    true, 
+    false
+]
+```
+
+After the training is complete, you will see in the screen the validation accuracy of the model, a SHAP value plot of feature importance calculated from the training data, and a model name. The model name is cached in the browser local storage so that it is used in the following analysis, but if you want to try training multiple models and overwrite the selected model name, you can do so in the Analyze Features section.
