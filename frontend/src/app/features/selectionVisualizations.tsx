@@ -12,6 +12,7 @@ import {
   multipleDataBarChart,
   multipleDataPieChart,
 } from "../d3_visualizations/multiple_data_plots";
+import { renderShapPlotSelectedPoints } from "../d3_visualizations/shap_plot";
 
 export default function GenerateSelectionVisualization({
   selectedPointIndices,
@@ -117,6 +118,17 @@ export default function GenerateSelectionVisualization({
           );
           if (container) {
             container.appendChild(selectedRendered);
+          }
+        }
+        if (featureData.shap_results) {
+          const shapSvgElement = renderShapPlotSelectedPoints(
+            featureData,
+            filteredSelectedIndices,
+            {width: renderOptions?.width || 400, height: renderOptions?.height || 300}
+          );
+          if (container) {
+            container.innerHTML += shouldPlotScatter ? "<h3>SHAP Values for Selected Points</h3>" : "<h3>SHAP Values for all Points</h3>";
+            container.appendChild(shapSvgElement);
           }
         }
       } catch (error) {

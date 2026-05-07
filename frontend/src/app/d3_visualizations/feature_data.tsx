@@ -12,6 +12,7 @@ export type FeatureData = {
   proxy_tasks_names: string[];
   classification_results: Record<string, string[]>;
   multiple_results: Record<string, string[][]>;
+  shap_results: Record<string, number[]>;
 };
 
 export type RenderFeatureDataOptions = {

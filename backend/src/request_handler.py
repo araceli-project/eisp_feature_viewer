@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.metrics import balanced_accuracy_score
 import uuid
 import xgboost as xgb
+import shap
 
 
 def _to_python_types(value):
@@ -38,6 +39,7 @@ def _sanitize_features(features: np.ndarray) -> np.ndarray:
 def process_images(list_of_ndarray: list, csai_model_name: str = ""):
     feature_vectors = extract_features_from_list_of_ndarrays(list_of_ndarray)
     inference_results = feature_vectors.inference_results
+    shap_results = {}
     if csai_model_name:
         if not os.path.exists(f"csai_model/{csai_model_name}.json"):
             raise FileNotFoundError(f"Model {csai_model_name} not found in csai_model directory.")
@@ -46,6 +48,15 @@ def process_images(list_of_ndarray: list, csai_model_name: str = ""):
         concatenated_features = np.concatenate(list(feature_vectors.get_all_features().values()), axis=1)
         csai_results = np.round(model.predict(concatenated_features))
         inference_results["csai"] = ["CSAI" if pred == 1 else "Non-CSAI" for pred in csai_results]
+        
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer.shap_values(concatenated_features)
+        start_idx = 0
+        for name, features in feature_vectors.get_all_features().items():
+            end_idx = start_idx + features.shape[1]
+            shap_results[name] = np.sum(shap_values[:, start_idx:end_idx], axis=1).tolist()
+            start_idx = end_idx
+
 
     features_pca: eisp.proxy_tasks.FeatureVectors = feature_vectors.apply_pca()[0]
 
@@ -70,7 +81,7 @@ def process_images(list_of_ndarray: list, csai_model_name: str = ""):
 
         features_dict[name] = tsne.fit_transform(features)
 
-    return features_dict, inference_results
+    return features_dict, inference_results, shap_results
 
 def train_model(list_of_ndarray: list, labels: list[bool], model_name: str = uuid.uuid4().hex):
     print("Starting feature extraction for training...")

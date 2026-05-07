@@ -4,6 +4,7 @@ export type FeaturesResponse = {
     string,
     (string | string[] | string[][] | object)[]
   >;
+  shap_results: Record<string, number[]>;
 };
 
 function getBackendBaseUrl(): string {

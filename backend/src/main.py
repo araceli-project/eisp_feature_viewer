@@ -67,7 +67,7 @@ async def features(request: Request):
     model_name = model_name.strip()
 
     try:
-        features_dict, inference_results = process_images(image_arrays, model_name)
+        features_dict, inference_results, shap_results = process_images(image_arrays, model_name)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
@@ -76,6 +76,7 @@ async def features(request: Request):
     return {
         "features": features_json,
         "inference_results": inference_results,
+        "shap_results": shap_results,
     }
 
 @app.post("/train")

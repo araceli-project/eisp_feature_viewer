@@ -43,8 +43,8 @@ export default function AnalyzeFeatures() {
             proxy_tasks_names,
             classification_results,
             multiple_results,
+            shap_results: response.shap_results,
           });
-          console.log("Multiple Results Data:", multiple_results);
           localStorage.setItem(
             "Features Data",
             JSON.stringify({
@@ -52,6 +52,7 @@ export default function AnalyzeFeatures() {
               proxy_tasks_names,
               classification_results,
               multiple_results,
+              shap_results: response.shap_results,
             }),
           );
         })
