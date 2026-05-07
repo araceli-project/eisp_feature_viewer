@@ -5,17 +5,8 @@ export type TrainResponse = {
 };
 
 function getBackendBaseUrl(): string {
-  const envUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.trim();
-  if (envUrl) {
-    try {
-      return new URL(envUrl).toString().replace(/\/$/, "");
-    } catch {
-      throw new Error(
-        "Invalid NEXT_PUBLIC_BACKEND_URL. Expected a full URL like http://127.0.0.1:8000",
-      );
-    }
-  }
-  return "http://127.0.0.1:8000";
+  const configuredBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.trim();
+  return (configuredBackendUrl || "http://localhost:8000").replace(/\/+$/, "");
 }
 
 function postMultipartWithXhr(url: string, body: FormData): Promise<string> {
