@@ -2,9 +2,19 @@
 
 ## Running
 
+
+### Docker
+
+To run everything through docker you can run the following command in the root directory:
+
+```bash
+docker compose up -d
+```
+It will expose the frontend server through port 3000.
+
 ### Frontend
 
-To run the frontend you only need to run the following command in the frontend repository:
+To run the frontend you only need to run the following command in the frontend directory:
 
 ```bash
 bun run dev
@@ -12,7 +22,7 @@ bun run dev
 
 ### Backend
 
-To run the backend you only need to run the following command in the backend repository:
+To run the backend you only need to run the following command in the backend directory:
 
 ```bash
 uv run fastapi dev ./src/main.py
