@@ -8,6 +8,7 @@ import {
 export type FeaturePoint = [number, number];
 
 export type FeatureData = {
+  timestamp: string;
   features: Record<string, FeaturePoint[]>;
   proxy_tasks_names: string[];
   classification_results: Record<string, string[]>;

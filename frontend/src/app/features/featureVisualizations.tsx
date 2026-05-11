@@ -39,7 +39,9 @@ export default function GenerateFeatureVisualization({
         );
         const handlePointsBrushed = (event: Event) => {
           const { detail } = event as CustomEvent<number[]>;
+          if (detail.length != 0) {
           setSelectedPointIndices(detail);
+          }
         };
         svgElement.addEventListener("points-brushed", handlePointsBrushed);
 

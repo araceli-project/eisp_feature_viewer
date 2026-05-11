@@ -49,7 +49,7 @@ export function renderShapPlot(
         .attr("y", d => y(d.feature) ?? 0)
         .attr("width", d => Math.abs(x(d.value) - x(0)))
         .attr("height", y.bandwidth())
-        .attr("fill", d => (d.value > 0 ? "steelblue" : "indianred"));
+        .attr("fill", "#f59e0b");
 
     // Add axes
     plotGroup.append("g")

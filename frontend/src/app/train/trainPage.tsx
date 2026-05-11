@@ -27,7 +27,11 @@ export default function Train() {
       setLoading(true);
       postTrain(selectedTrainingFiles, selectedTargetLabelsFile)
         .then((response) => {
-          localStorage.setItem("Model Name", response.model_name);
+          const csaiModelNames = localStorage.getItem("CSAI Model Names")
+            ? JSON.parse(localStorage.getItem("CSAI Model Names") as string)
+            : [];
+          csaiModelNames.push(response.model_name);
+          localStorage.setItem("CSAI Model Names", JSON.stringify(csaiModelNames));
           localStorage.setItem("Test Metric", response.test_metric.toString());
           localStorage.setItem(
             "SHAP Aggregation",
@@ -64,7 +68,7 @@ export default function Train() {
       </p>
       <div className="flex flex-row items-center justify-center gap-4">
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="dirInput">
+          <label className="block  mb-2" htmlFor="dirInput">
             Select Training Data Directory
           </label>
           <input
@@ -77,7 +81,7 @@ export default function Train() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="labelsInput">
+          <label className="block mb-2" htmlFor="labelsInput">
             Select Target Labels File
           </label>
           <input
