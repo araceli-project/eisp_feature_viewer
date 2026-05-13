@@ -107,7 +107,7 @@ export default function AnalyzeFeatures() {
       )}
 
       {!loading && selectedFiles && (
-        selectedFiles.length > 0 && (
+        selectedFiles.length > 0 && csaiModelNames && csaiModelNames.length > 0 && (
           <div className="flex flex-col items-start justify-center gap-2 border border-gray-300 rounded p-4 mb-4">
             <label className="text-[var(--accent-1)]">Select CSAI Model:</label>
           <select

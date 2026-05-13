@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   classificationBarChart,
   classificationPieChart,
+  classificationStackedBarChart
 } from "../d3_visualizations/classification_plots";
 import {
   FeatureData,
@@ -11,6 +12,7 @@ import {
 import {
   multipleDataBarChart,
   multipleDataPieChart,
+  multipleDataStackedBarChart
 } from "../d3_visualizations/multiple_data_plots";
 import { renderShapPlotSelectedPoints } from "../d3_visualizations/shap_plot";
 
@@ -83,9 +85,16 @@ export default function GenerateSelectionVisualization({
             filteredSelectedIndices,
             renderOptions,
           );
+          const stackedBarSvgElement = classificationStackedBarChart(
+            featureData,
+            selectedProxyTaskName,
+            filteredSelectedIndices,
+            renderOptions,
+          );
           if (container) {
             container.appendChild(barSvgElement);
             container.appendChild(pieSvgElement);
+            container.appendChild(stackedBarSvgElement);
           }
         }
 
@@ -102,9 +111,16 @@ export default function GenerateSelectionVisualization({
             filteredSelectedIndices,
             renderOptions,
           );
+          const multipleStackedBarSvgElement = multipleDataStackedBarChart(
+            featureData,
+            selectedProxyTaskName,
+            filteredSelectedIndices,
+            renderOptions,
+          );
           if (container) {
             container.appendChild(multipleBarSvgElement);
             container.appendChild(multiplePieSvgElement);
+            container.appendChild(multipleStackedBarSvgElement);
           }
         }
 
@@ -137,7 +153,7 @@ export default function GenerateSelectionVisualization({
     }
   }, [selectedProxyTaskName, selectedPointIndices, featureData, filterProxyTask, filterValue]);
   return (
-    <div className="flex flex-col gap-4">
+    <div className={"flex flex-col gap-4 border-2 " + (selectedPointIndices.length < Object.values(featureData.features)[0].length ? "border-[var(--accent-4)]" : "border-[var(--accent-3)]") + " p-4 rounded"}>
       <div className="flex flex-row gap-3 items-center border-2 border-[var(--accent-1)] p-2 rounded">
       <h1>Feature to visualize:</h1>
 

@@ -196,3 +196,120 @@ export function multipleDataPieChart(
 
   return svg.node() as SVGSVGElement;
 }
+
+export function multipleDataStackedBarChart(
+  featureData: FeatureData,
+  proxyTaskName: string,
+  selected_points: number[],
+  options: RenderFeatureDataOptions = {},
+): SVGSVGElement {
+  const multipleResults = featureData.multiple_results[proxyTaskName];
+  if (!multipleResults) {
+    throw new Error(
+      `Proxy task "${proxyTaskName}" was not found in multiple results.`,
+    );
+  }
+
+  const selectedLabels = selected_points.map((index) =>
+    index < multipleResults.length ? multipleResults[index] : "Unknown",
+  );
+  const flattenedLabels = selectedLabels.flat();
+  const labelCounts: Record<string, number> = {};
+  flattenedLabels.forEach((label) => {
+    labelCounts[label] = (labelCounts[label] || 0) + 1;
+  });
+
+  const data = Object.entries(labelCounts)
+    .map(([label, count]) => ({
+      label,
+      count,
+    }))
+    .filter((d) => d.label !== "no_faces");
+  const labelOrder = getLabelOrderForProxyTask(
+    proxyTaskName,
+    data.map(({ label }) => label),
+  );
+  const colorSchemeType = ColorTypeForProxyTask[proxyTaskName];
+  const labelOrderIndex = new Map(
+    labelOrder.map((label, index) => [label, index]),
+  );
+  const orderedData = [...data].sort(
+    (a, b) =>
+      (labelOrderIndex.get(a.label) ?? Number.MAX_SAFE_INTEGER) -
+      (labelOrderIndex.get(b.label) ?? Number.MAX_SAFE_INTEGER),
+  );
+
+  const width = options.width ?? 400;
+  const height = options.height ?? 300;
+  const margin = { top: 20, right: 20, bottom: 50, left: 60 };
+
+  const svg = d3.create("svg").attr("width", width).attr("height", height);
+
+  const totalCount = d3.sum(orderedData, (d) => d.count);
+  const stackedData = orderedData.reduce<
+    { label: string; count: number; start: number; end: number }[]
+  >((acc, d) => {
+    const start = acc.length > 0 ? acc[acc.length - 1].end : 0;
+    acc.push({ ...d, start, end: start + d.count });
+    return acc;
+  }, []);
+
+  const x = d3
+    .scaleLinear()
+    .domain([0, Math.max(totalCount, 1)])
+    .range([margin.left, width - margin.right])
+    .nice();
+
+  const y = d3
+    .scaleBand()
+    .domain(["Selected"])
+    .range([margin.top, height - margin.bottom])
+    .paddingInner(0.2);
+  const barY = y("Selected");
+  if (barY === undefined) {
+    throw new Error(`Stacked bar category could not be mapped to the y axis.`);
+  }
+
+  svg
+    .append("g")
+    .selectAll("rect")
+    .data(stackedData)
+    .join("rect")
+    .attr("x", (d) => x(d.start))
+    .attr("y", barY)
+    .attr("height", y.bandwidth())
+    .attr("width", (d) => x(d.end) - x(d.start))
+    .attr("fill", (d) =>
+      getColorForValue(d.label, labelOrder, colorSchemeType),
+    );
+
+  svg
+    .append("g")
+    .selectAll("text")
+    .data(stackedData)
+    .join("text")
+    .attr("x", (d) => (x(d.start) + x(d.end)) / 2)
+    .attr("y", barY + y.bandwidth() / 2)
+    .attr("text-anchor", "middle")
+    .attr("dominant-baseline", "middle")
+    .attr("fill", (d) =>
+      getReadableTextColor(
+        getColorForValue(d.label, labelOrder, colorSchemeType),
+      ),
+    )
+    .attr("font-size", 11)
+    .text((d) => d.label)
+    .style("display", (d) => (x(d.end) - x(d.start) >= 30 ? null : "none"));
+
+  svg
+    .append("g")
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x).ticks(Math.min(10, totalCount || 1), "d"));
+
+  svg
+    .append("g")
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y));
+
+  return svg.node() as SVGSVGElement;
+}

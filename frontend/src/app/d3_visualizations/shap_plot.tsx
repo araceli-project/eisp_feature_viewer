@@ -90,7 +90,7 @@ export function renderShapPlotSelectedPoints(
 
     const data_per_feature = Object.entries(filteredShap_results).map(([feature, values]) => ({
         feature,
-        importance: Math.abs(values.reduce((a, b) => a + b, 0)/values.length),
+        importance: values.reduce((a, b) => Math.abs(a) + Math.abs(b), 0)/values.length,
     }));
 
     const maxValueFromAllPoints = d3.max(Object.values(featureData.shap_results).flat(), (d) => Math.abs(d)) || 0;

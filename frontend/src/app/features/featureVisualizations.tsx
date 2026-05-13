@@ -64,7 +64,7 @@ export default function GenerateFeatureVisualization({
       <h1 className="text-3xl font-bold text-center sm:text-left py-8">
         Feature Visualization
       </h1>
-    <div className="py-2 flex flex-row items-center justify-center gap-4">
+    <div className="py-2 flex flex-row items-start justify-center gap-4">
       <div className="flex flex-col items-center justify-center gap-2">
         <div className="flex flex-row text-sm text-center sm:text-left items-center justify-center border-2 border-[var(--accent-1)] rounded p-2">
         <select
@@ -97,7 +97,7 @@ export default function GenerateFeatureVisualization({
         </select>
       </div>
 
-      <div id="feature-visualization" style={{ marginTop: "20px" }}></div>
+      <div id="feature-visualization" style={{ marginTop: "20px", border: "2px solid var(--accent-3)", paddingTop: "10px"}}></div>
 
       </div>
       {selectedPointIndices.length > 0 && (
