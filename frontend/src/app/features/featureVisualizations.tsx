@@ -66,7 +66,7 @@ export default function GenerateFeatureVisualization({
       </h1>
     <div className="py-2 flex flex-row items-start justify-center gap-4">
       <div className="flex flex-col items-center justify-center gap-2">
-        <div className="flex flex-row text-sm text-center sm:text-left items-center justify-center border-2 border-[var(--accent-1)] rounded p-2">
+        <div className="flex flex-row  text-center sm:text-left items-center justify-center border-3 border-[var(--accent-1)] rounded p-2">
         <select
           id="proxyTaskSelect"
           value={proxyTaskName}
@@ -82,7 +82,7 @@ export default function GenerateFeatureVisualization({
         </select>
 
       </div>
-      <div className="flex flex-row text-sm text-center sm:text-left border-2 border-[var(--accent-2)] rounded p-2 my-2">
+      <div className="flex flex-row text-center sm:text-left border-3 border-[var(--accent-2)] rounded p-2 my-2">
         <select
           id="colorByProxyTaskSelect"
           value={colorByProxyTaskName}
@@ -97,7 +97,7 @@ export default function GenerateFeatureVisualization({
         </select>
       </div>
 
-      <div id="feature-visualization" style={{ marginTop: "20px", border: "2px solid var(--accent-3)", paddingTop: "10px"}}></div>
+      <div id="feature-visualization" style={{ marginTop: "20px", border: "4px solid var(--accent-3)", paddingTop: "10px"}}></div>
 
       </div>
       {selectedPointIndices.length > 0 && (
@@ -130,7 +130,7 @@ export default function GenerateFeatureVisualization({
 
       </div>
     </div>
-    <div>
+    <div className="mb-10">
       <h2 className="text-xl font-bold mb-2">General Dataset Visualization</h2>
       <GenerateSelectionVisualization
         id_number={3}

@@ -67,10 +67,10 @@ export function renderFeatureData(
   const height = options.height ?? 480;
   const pointRadius = options.pointRadius ?? 3.5;
   const margin = {
-    top: 24,
-    right: labelDomain.length > 0 ? 180 : 24,
-    bottom: 44,
-    left: 52,
+    top: 32,
+    right: labelDomain.length > 0 ? 180 : 36,
+    bottom: 56,
+    left: 72,
   };
 
   const xExtent = d3.extent(pointData, ({ x }) => x) as [number, number];
@@ -127,8 +127,8 @@ export function renderFeatureData(
     .attr("width", tooltipWidth)
     .attr("height", tooltipHeight + 20)
     .attr("rx", 6)
-    .attr("fill", "#ffffff")
-    .attr("stroke", "#d4d4d8")
+    .attr("fill", "var(--background)")
+    .attr("stroke", "var(--accent-2)")
     .attr("opacity", 0.95);
 
   const tooltipImage = tooltip
@@ -144,7 +144,7 @@ export function renderFeatureData(
     .attr("x", tooltipPadding)
     .attr("y", tooltipHeight + 12)
     .attr("font-size", 10)
-    .attr("fill", "#ffffff");
+    .attr("fill", "var(--foreground)");
 
   const setTooltipPosition = (event: MouseEvent) => {
     const [mx, my] = d3.pointer(event, svg.node());
@@ -208,7 +208,7 @@ export function renderFeatureData(
     .on("mouseleave", function () {
       const circle = d3.select(this);
       if (circle.attr("data-brushed") === "true") {
-        circle.attr("stroke", "#ffffff").attr("stroke-width", 1.5);
+        circle.attr("stroke", "var(--foreground)").attr("stroke-width", 1.0);
       } else {
         circle.attr("stroke", null).attr("stroke-width", null);
       }
@@ -250,8 +250,8 @@ export function renderFeatureData(
 
         d3.select(this)
           .attr("data-brushed", isSelected ? "true" : "false")
-          .attr("stroke", isSelected ? "#ffffff" : null)
-          .attr("stroke-width", isSelected ? 1.5 : null)
+          .attr("stroke", isSelected ? "var(--foreground)" : null)
+          .attr("stroke-width", isSelected ? 1.0 : null)
           .attr("fill-opacity", isSelected ? 1 : 0.2);
       });
 
@@ -278,7 +278,7 @@ export function renderFeatureData(
       .attr("y", 0)
       .attr("font-size", 12)
       .attr("font-weight", 600)
-      .attr("fill", "#ffffff")
+      .attr("fill", "var(--foreground)")
       .text(colorByProxyTaskName ?? "Label");
 
     const legendItems = legend
@@ -301,7 +301,7 @@ export function renderFeatureData(
       .attr("x", 16)
       .attr("y", 4)
       .attr("font-size", 12)
-      .attr("fill", "#ffffff")
+      .attr("fill", "var(--foreground)")
       .text((label) => label);
   }
 
@@ -312,7 +312,7 @@ export function renderFeatureData(
     .attr("text-anchor", "middle")
     .attr("font-size", 14)
     .attr("font-weight", 600)
-    .attr("fill", "#ffffff")
+    .attr("fill", "var(--foreground)")
     .text(`${proxyTaskName} Scatter Plot`);
 
   return svg.node() as SVGSVGElement;
@@ -344,10 +344,10 @@ export function renderSelectedFeatureData(
   const height = options.height ?? 480;
   const pointRadius = options.pointRadius ?? 3.5;
   const margin = {
-    top: 24,
-    right: 24,
-    bottom: 44,
-    left: 52,
+    top: 32,
+    right: 36,
+    bottom: 56,
+    left: 72,
   };
 
   const xExtent = d3.extent(pointData, ({ x }) => x) as [number, number];
@@ -387,16 +387,16 @@ export function renderSelectedFeatureData(
     .attr("cy", ({ y }) => yScale(y))
     .attr("r", pointRadius)
     .attr("fill", ({ index }) =>
-      selectedIndices.has(index) ? "#f59e0b" : "#2563eb",
+      selectedIndices.has(index) ? "var(--accent-4)" : "var(--accent-3)",
     )
     .attr("fill-opacity", ({ index }) =>
       !hasSelection || selectedIndices.has(index) ? 0.9 : 0.4,
     )
     .attr("stroke", ({ index }) =>
-      selectedIndices.has(index) ? "#ffffff" : null,
+      selectedIndices.has(index) ? "var(--foreground)" : null,
     )
     .attr("stroke-width", ({ index }) =>
-      selectedIndices.has(index) ? 1.5 : null,
+      selectedIndices.has(index) ? 1.0 : null,
     );
 
   svg
@@ -406,7 +406,7 @@ export function renderSelectedFeatureData(
     .attr("text-anchor", "middle")
     .attr("font-size", 14)
     .attr("font-weight", 600)
-    .attr("fill", "#ffffff")
+    .attr("fill", "var(--foreground)")
     .text(`${proxyTaskName} Scatter Plot (Selected Points)`);
 
   return svg.node() as SVGSVGElement;

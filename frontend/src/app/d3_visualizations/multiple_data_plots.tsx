@@ -7,6 +7,24 @@ import {
   getReadableTextColor,
 } from "./proxy_colors";
 
+const MAX_VISIBLE_CATEGORIES = 10;
+type ChartDatum = { label: string; count: number };
+
+function limitToTopCategories(orderedData: ChartDatum[]): ChartDatum[] {
+  if (orderedData.length <= MAX_VISIBLE_CATEGORIES) {
+    return orderedData;
+  }
+
+  const topLabels = new Set(
+    [...orderedData]
+      .sort((a, b) => b.count - a.count)
+      .slice(0, MAX_VISIBLE_CATEGORIES)
+      .map(({ label }) => label),
+  );
+
+  return orderedData.filter(({ label }) => topLabels.has(label));
+}
+
 export function multipleDataBarChart(
   featureData: FeatureData,
   proxyTaskName: string,
@@ -48,29 +66,30 @@ export function multipleDataBarChart(
       (labelOrderIndex.get(a.label) ?? Number.MAX_SAFE_INTEGER) -
       (labelOrderIndex.get(b.label) ?? Number.MAX_SAFE_INTEGER),
   );
+  const limitedData = limitToTopCategories(orderedData);
 
   const width = options.width ?? 400;
   const height = options.height ?? 300;
-  const margin = { top: 20, right: 20, bottom: 50, left: 60 };
+  const margin = { top: 32, right: 36, bottom: 120, left: 72 };
 
   const svg = d3.create("svg").attr("width", width).attr("height", height);
 
   const x = d3
     .scaleBand()
-    .domain(orderedData.map((d) => d.label))
+    .domain(limitedData.map((d) => d.label))
     .range([margin.left, width - margin.right])
     .padding(0.1);
 
   const y = d3
     .scaleLinear()
-    .domain([0, d3.max(orderedData, (d) => d.count) ?? 0])
+    .domain([0, d3.max(limitedData, (d) => d.count) ?? 0])
     .nice()
     .range([height - margin.bottom, margin.top]);
 
   svg
     .append("g")
     .selectAll("rect")
-    .data(orderedData)
+    .data(limitedData)
     .join("rect")
     .attr("x", (d) => {
       const xValue = x(d.label);
@@ -145,10 +164,11 @@ export function multipleDataPieChart(
       (labelOrderIndex.get(a.label) ?? Number.MAX_SAFE_INTEGER) -
       (labelOrderIndex.get(b.label) ?? Number.MAX_SAFE_INTEGER),
   );
+  const limitedData = limitToTopCategories(orderedData);
 
   const width = options.width ?? 400;
   const height = options.height ?? 300;
-  const margin = { top: 20, right: 20, bottom: 50, left: 60 };
+  const margin = { top: 32, right: 36, bottom: 56, left: 72 };
 
   const svg = d3.create("svg").attr("width", width).attr("height", height);
 
@@ -156,7 +176,7 @@ export function multipleDataPieChart(
     Math.min(width, height) / 2 - Math.max(...Object.values(margin));
 
   const pie = d3.pie<{ label: string; count: number }>().value((d) => d.count);
-  const arcs = pie(orderedData);
+  const arcs = pie(limitedData);
 
   const arcGenerator = d3
     .arc<d3.PieArcDatum<{ label: string; count: number }>>()
@@ -238,15 +258,16 @@ export function multipleDataStackedBarChart(
       (labelOrderIndex.get(a.label) ?? Number.MAX_SAFE_INTEGER) -
       (labelOrderIndex.get(b.label) ?? Number.MAX_SAFE_INTEGER),
   );
+  const limitedData = limitToTopCategories(orderedData);
 
   const width = options.width ?? 400;
   const height = options.height ?? 300;
-  const margin = { top: 20, right: 20, bottom: 50, left: 60 };
+  const margin = { top: 32, right: 36, bottom: 56, left: 72 };
 
   const svg = d3.create("svg").attr("width", width).attr("height", height);
 
-  const totalCount = d3.sum(orderedData, (d) => d.count);
-  const stackedData = orderedData.reduce<
+  const totalCount = d3.sum(limitedData, (d) => d.count);
+  const stackedData = limitedData.reduce<
     { label: string; count: number; start: number; end: number }[]
   >((acc, d) => {
     const start = acc.length > 0 ? acc[acc.length - 1].end : 0;
@@ -288,8 +309,11 @@ export function multipleDataStackedBarChart(
     .selectAll("text")
     .data(stackedData)
     .join("text")
-    .attr("x", (d) => (x(d.start) + x(d.end)) / 2)
-    .attr("y", barY + y.bandwidth() / 2)
+    .attr(
+      "transform",
+      (d) =>
+        `translate(${(x(d.start) + x(d.end)) / 2},${barY + y.bandwidth() / 2}) rotate(-45)`,
+    )
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
     .attr("fill", (d) =>

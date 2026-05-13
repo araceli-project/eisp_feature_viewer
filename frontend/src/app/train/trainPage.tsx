@@ -60,9 +60,9 @@ export default function Train() {
   }, [trainResponse]);
 
   return (
-    <div className="py-8 flex flex-col items-center justify-center gap-4">
+    <div className="py-8 text-xl flex flex-col items-center justify-center gap-4">
       <h1 className="text-5xl font-bold mb-4">Train New Model</h1>
-      <p className="text-1xl mb-2 font-bold text-center sm:text-center">
+      <p className="text-2xl mb-2 font-bold text-center sm:text-center">
         This section allows you to upload training data and train a xgboost model
         for a target task using the available Proxy Tasks features. Please insert a directory containing the training images, and a json file containing only an array with the labels.
       </p>
@@ -72,7 +72,7 @@ export default function Train() {
             Select Training Data Directory
           </label>
           <input
-            className="border border-gray-300 rounded p-2 mb-4"
+            className="border-4 border-[var(--accent-2)] rounded p-2 mb-4"
             type="file"
             id="dirInput"
             {...directoryInputAttrs}
@@ -85,7 +85,7 @@ export default function Train() {
             Select Target Labels File
           </label>
           <input
-            className="border border-gray-300 rounded p-2 mb-4"
+            className="border-4 border-[var(--accent-2)] rounded p-2 mb-4"
             type="file"
             id="labelsInput"
             onChange={(e) => {

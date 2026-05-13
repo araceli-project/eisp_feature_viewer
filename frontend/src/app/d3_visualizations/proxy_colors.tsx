@@ -6,7 +6,7 @@ export enum ColorSchemeType {
 }
 export const colorSchemes: Record<ColorSchemeType, any> = {
   [ColorSchemeType.Categorical]: ["#ffb549", "#702aee", ...d3.schemeTableau10],
-  [ColorSchemeType.Sequential]: d3.interpolateRgb("#f7fbff", "#702aee")
+  [ColorSchemeType.Sequential]: d3.interpolateRgb("#99a4b0", "#702aee")
 };
 
 export const ColorTypeForProxyTask: Record<string, ColorSchemeType> = {

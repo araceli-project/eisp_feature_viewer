@@ -10,7 +10,6 @@ import {
 } from "../services/featuresService";
 
 import GenerateFeatureVisualization from "./featureVisualizations";
-import { time } from "console";
 
 const directoryInputAttrs: InputHTMLAttributes<HTMLInputElement> & {
   webkitdirectory?: string;
@@ -84,7 +83,7 @@ export default function AnalyzeFeatures() {
   }, [selectedFiles, shouldRequestFeatures, csaiSelectedModel]);
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center text-xl">
       <h1 className="text-5xl font-bold text-center sm:text-left py-8">
         Analyze Features
       </h1>
@@ -94,7 +93,7 @@ export default function AnalyzeFeatures() {
       <div className="flex flex-col items-center justify-center gap-4">
       {!loading && (
         <input
-          className="border border-gray-300 rounded p-2 mb-4 py-4"
+          className="border-4 border-[var(--accent-2)] rounded p-2 mb-4 py-4"
           type="file"
           id="dirInput"
           {...directoryInputAttrs}
@@ -108,7 +107,7 @@ export default function AnalyzeFeatures() {
 
       {!loading && selectedFiles && (
         selectedFiles.length > 0 && csaiModelNames && csaiModelNames.length > 0 && (
-          <div className="flex flex-col items-start justify-center gap-2 border border-gray-300 rounded p-4 mb-4">
+          <div className="flex flex-col items-start justify-center gap-2 border-4 border-[var(--accent-2)] rounded p-4 mb-4">
             <label className="text-[var(--accent-1)]">Select CSAI Model:</label>
           <select
             value={csaiSelectedModel || ""}
@@ -143,7 +142,7 @@ export default function AnalyzeFeatures() {
       )}
 
       {!loading && selectedFiles && pastFeatures && pastFeatures.length > 0 && (
-        <div className="flex flex-col items-start justify-center gap-2 border border-gray-300 rounded p-4 mb-4">
+        <div className="flex flex-col items-start justify-center gap-2 border-4 border-[var(--accent-2)] rounded p-4 mb-4">
           <label className="text-[var(--accent-1)]">Restore Past Features Data:</label>
           {pastFeatures
           .filter(feature => Object.values(feature.features)[0].length === selectedFiles.length)
@@ -155,7 +154,7 @@ export default function AnalyzeFeatures() {
               <button 
                 onClick={() => setFeatureData(feature)}
               >
-              <span className="ml-2 text-sm text-[var(--accent-2)] hover:text-[var(--accent-1)] rounded border border-[var(--accent-2)] hover:border-[var(--accent-1)] px-2 py-1">
+              <span className="ml-2 text-sm text-[var(--accent-2)] hover:text-[var(--accent-1)] rounded border-2 border-[var(--accent-2)] hover:border-[var(--accent-1)] px-2 py-1">
                 Visualize
               </span>
             </button></div>)}

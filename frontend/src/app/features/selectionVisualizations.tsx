@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   classificationBarChart,
-  classificationPieChart,
   classificationStackedBarChart
 } from "../d3_visualizations/classification_plots";
 import {
@@ -11,7 +10,6 @@ import {
 } from "../d3_visualizations/feature_data";
 import {
   multipleDataBarChart,
-  multipleDataPieChart,
   multipleDataStackedBarChart
 } from "../d3_visualizations/multiple_data_plots";
 import { renderShapPlotSelectedPoints } from "../d3_visualizations/shap_plot";
@@ -79,12 +77,6 @@ export default function GenerateSelectionVisualization({
             filteredSelectedIndices,
             renderOptions,
           );
-          const pieSvgElement = classificationPieChart(
-            featureData,
-            selectedProxyTaskName,
-            filteredSelectedIndices,
-            renderOptions,
-          );
           const stackedBarSvgElement = classificationStackedBarChart(
             featureData,
             selectedProxyTaskName,
@@ -93,7 +85,6 @@ export default function GenerateSelectionVisualization({
           );
           if (container) {
             container.appendChild(barSvgElement);
-            container.appendChild(pieSvgElement);
             container.appendChild(stackedBarSvgElement);
           }
         }
@@ -105,21 +96,14 @@ export default function GenerateSelectionVisualization({
             filteredSelectedIndices,
             renderOptions,
           );
-          const multiplePieSvgElement = multipleDataPieChart(
-            featureData,
-            selectedProxyTaskName,
-            filteredSelectedIndices,
-            renderOptions,
-          );
           const multipleStackedBarSvgElement = multipleDataStackedBarChart(
             featureData,
             selectedProxyTaskName,
             filteredSelectedIndices,
             renderOptions,
           );
-          if (container) {
+           if (container) {
             container.appendChild(multipleBarSvgElement);
-            container.appendChild(multiplePieSvgElement);
             container.appendChild(multipleStackedBarSvgElement);
           }
         }
