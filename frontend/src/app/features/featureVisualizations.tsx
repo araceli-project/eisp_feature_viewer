@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import TooltipComponent from "@/app/components/tooltip";
 import {
   type FeatureData,
   renderFeatureData,
@@ -61,9 +62,12 @@ export default function GenerateFeatureVisualization({
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
+      <div className="flex flex-row items-center justify-center gap-2">
       <h1 className="text-3xl font-bold text-center sm:text-left py-8">
-        Feature Visualization
+        Feature Visualization 
       </h1>
+        <TooltipComponent text="This visualization shows the features extracted from your images. It is expected that points near each other represent similar images by the model task. Each point represents an image, and the position is determined by the projection on 2d using TSNE of the the model representation of the image. You can select different proxy tasks to view the features from different perspectives, and color the points based on classification results. Use brushing to select points and generate detailed visualizations for those selections." componentID="feature-vis-tooltip" size="6" />
+      </div>
     <div className="py-2 flex flex-row items-start justify-center gap-4">
       <div className="flex flex-col items-center justify-center gap-2">
         <div className="flex flex-row  text-center sm:text-left items-center justify-center border-3 border-[var(--accent-1)] rounded p-2">

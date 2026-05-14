@@ -13,6 +13,7 @@ import {
   multipleDataStackedBarChart
 } from "../d3_visualizations/multiple_data_plots";
 import { renderShapPlotSelectedPoints } from "../d3_visualizations/shap_plot";
+import TooltipComponent from "../components/tooltip";
 
 export default function GenerateSelectionVisualization({
   selectedPointIndices,
@@ -127,7 +128,7 @@ export default function GenerateSelectionVisualization({
             {width: renderOptions?.width || 400, height: renderOptions?.height || 300}
           );
           if (container) {
-            container.innerHTML += shouldPlotScatter ? "<h3>SHAP Values for Selected Points</h3>" : "<h3>SHAP Values for all Points</h3>";
+            container.innerHTML += shouldPlotScatter ? "<h3>Feature Importance Values for Selected Points</h3>" : "<h3>Feature Importance Values for all Points</h3>";
             container.appendChild(shapSvgElement);
           }
         }
@@ -137,8 +138,8 @@ export default function GenerateSelectionVisualization({
     }
   }, [selectedProxyTaskName, selectedPointIndices, featureData, filterProxyTask, filterValue]);
   return (
-    <div className={"flex flex-col gap-4 border-2 " + (selectedPointIndices.length < Object.values(featureData.features)[0].length ? "border-[var(--accent-4)]" : "border-[var(--accent-3)]") + " p-4 rounded"}>
-      <div className="flex flex-row gap-3 items-center border-2 border-[var(--accent-1)] p-2 rounded">
+    <div className={"flex flex-col gap-4 border-2 items-center w-full" + (selectedPointIndices.length < Object.values(featureData.features)[0].length ? "border-[var(--accent-4)]" : "border-[var(--accent-3)]") + " p-4 rounded"}>
+      <div className="flex flex-row w-full gap-3 items-center border-2 border-[var(--accent-1)] p-2 rounded">
       <h1>Feature to visualize:</h1>
 
       <select
@@ -154,8 +155,9 @@ export default function GenerateSelectionVisualization({
       </select>
 
       </div>
-      <div className="flex flex-row gap-3 items-center border-2 border-[var(--accent-2)] p-2 rounded">
+      <div className="flex flex-row w-full gap-3 items-center border-2 border-[var(--accent-2)] p-2 rounded">
         <h3>Filter by:</h3>
+        <TooltipComponent text="Use this filter to limit the images used for the plots using a specific value. For example, if you select a classification proxy task, you can choose to only use images that belong to a certain class, if choosing a proxy task that yields more than one value per image, it will use images that have that value. This allows you to analyze the features and SHAP values for specific groups within your selection." componentID={`filter-tooltip-${id_number}`} size="6" />
       <select
         className="border-2 border-[var(--accent-3)] p-1 rounded"
         value={filterProxyTask}
@@ -199,6 +201,9 @@ export default function GenerateSelectionVisualization({
       )}
       </div>
       <div id={`selection-visualization-${id_number}`} className="py-4"></div>
+      {selectedPointIndices.length > 0 && featureData.shap_results && (
+          <TooltipComponent text="This plot shows the feature importance values, calculated from aggregating the SHAP values extracted from the model inference of these images. It represents the average contribution of each feature to the model's predictions." componentID={`shap-tooltip-${id_number}`} size="6" />
+      )}
     </div>
   );
 }
