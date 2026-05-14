@@ -2,9 +2,10 @@
 import { useState } from "react";
 import AnalyzeFeatures from "./features/featuresPage";
 import Train from "./train/trainPage";
+import Guide from "./guide/guidePage";
 
 export default function Home() {
-  const [view, setView] = useState<"analyze" | "train">("analyze");
+  const [view, setView] = useState<"analyze" | "train" | "guide">("analyze");
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   return (
     <div className="flex flex-col flex-1 items-center justify-center font-sans">
@@ -50,11 +51,20 @@ export default function Home() {
         >
           Train Model
         </button>
+        <button
+          className="bg-[var(--accent-2)] hover:bg-[var(--accent-1)] text-white font-bold py-2 px-4 mx-2 rounded"
+          onClick={() => {
+            setView("guide");
+          }}
+        >
+          Guide
+        </button>
         </div>
       </nav>
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-start px-16 sm:items-start">
         {view === "analyze" && <AnalyzeFeatures />}
         {view === "train" && <Train />}
+        {view === "guide" && <Guide />}
       </main>
     </div>
   );
