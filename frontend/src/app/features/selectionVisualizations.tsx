@@ -138,7 +138,7 @@ export default function GenerateSelectionVisualization({
     }
   }, [selectedProxyTaskName, selectedPointIndices, featureData, filterProxyTask, filterValue]);
   return (
-    <div className={"flex flex-col gap-4 border-2 items-center w-full" + (selectedPointIndices.length < Object.values(featureData.features)[0].length ? "border-[var(--accent-4)]" : "border-[var(--accent-3)]") + " p-4 rounded"}>
+    <div style={{ border: `2px solid ${selectedPointIndices.length < Object.values(featureData.features)[0].length ? 'var(--accent-4)' : 'var(--accent-3)'}` }} className="flex flex-col gap-4 border-2 items-center w-full p-4 rounded">
       <div className="flex flex-row w-full gap-3 items-center border-2 border-[var(--accent-1)] p-2 rounded">
       <h1>Feature to visualize:</h1>
 

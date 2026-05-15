@@ -14,15 +14,10 @@ Finally, if you select points with the brush at the scatter plot, a second visua
 
 # Train Model
 
-The Train Model section is used to train a model for CSAI classification. You need to select a directory with the images to train the model, and a JSON file with a list of labels with the same size as the number of images. An example of label JSON is the following:
+The Train Model section is used to train a model for CSAI classification. You need to select a directory with the images to train the model, and a JSON file with a list of labels with the same size as the number of images, with the labels reflecting the file names in lexicographical order. An example of label JSON is the following:
 
 ```json
-[
-    true, 
-    false, 
-    true, 
-    false
-]
+[true, false, true, false]
 ```
 
 After the training is complete, you will see in the screen the validation accuracy of the model, a SHAP value plot of feature importance calculated from the training data, and a model name. The model name is cached in the browser local storage so that it is used in the following analysis, and will appear at the Analyze Features section.

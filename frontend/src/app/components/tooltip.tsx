@@ -4,7 +4,7 @@ export default function TooltipComponent({ text, componentID, size }: { text: st
   return (
     <div>
         <a data-tooltip-id={componentID}>
-          <img src="tooltip.svg" alt="Tooltip Icon" className={`inline-block w-${size} h-${size} ml-2`} />
+          <img style={{ width: `calc(${size} * 0.25rem)`, height: `calc(${size} * 0.25rem)` }} src="tooltip.svg" alt="Tooltip Icon" className="inline-block ml-2" />
       </a>
       <Tooltip id={componentID}>
         <div className="text-xl flex flex-col gap-2 word-break max-w-xs">
