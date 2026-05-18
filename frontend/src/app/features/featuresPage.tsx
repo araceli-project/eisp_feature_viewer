@@ -35,7 +35,7 @@ export default function AnalyzeFeatures() {
     setPastFeatures(localStorage.getItem("Past Features Data")
       ? JSON.parse(localStorage.getItem("Past Features Data") as string)
       : []);
-    if (csaiModelNames.length > 0) {
+    if (csaiSelectedModel == null &&csaiModelNames.length > 0) {
       setCsaiSelectedModel(csaiModelNames[0]);
     }
 
