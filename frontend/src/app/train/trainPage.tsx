@@ -21,9 +21,10 @@ export default function Train() {
   const [trainResponse, setTrainResponse] = useState<TrainResponse | null>(
     null,
   );
+  const [shouldRequestTrain, setShouldRequestTrain] = useState(false);
 
   useEffect(() => {
-    if (selectedTrainingFiles && selectedTargetLabelsFile) {
+    if (selectedTrainingFiles && selectedTargetLabelsFile && shouldRequestTrain) {
       setLoading(true);
       postTrain(selectedTrainingFiles, selectedTargetLabelsFile)
         .then((response) => {
@@ -41,9 +42,10 @@ export default function Train() {
         })
         .finally(() => {
           setLoading(false);
+          setShouldRequestTrain(false);
         });
     }
-  }, [selectedTrainingFiles, selectedTargetLabelsFile]);
+  }, [selectedTrainingFiles, selectedTargetLabelsFile, shouldRequestTrain]);
 
   useEffect(() => {
     if (trainResponse) {
@@ -77,7 +79,10 @@ export default function Train() {
             id="dirInput"
             {...directoryInputAttrs}
             multiple
-            onChange={(e) => setSelectedTrainingFiles(e.target.files)}
+            onChange={(e) => {
+              setSelectedTrainingFiles(e.target.files);
+              setShouldRequestTrain(false);
+            }}
           />
         </div>
         <div className="mb-4">
@@ -91,10 +96,18 @@ export default function Train() {
             onChange={(e) => {
               const file = e.target.files ? e.target.files[0] : null;
               setSelectedTargetLabelsFile(file);
+              setShouldRequestTrain(false);
             }}
           />
         </div>
       </div>
+      <button
+        className="bg-[var(--accent-2)] text-white px-4 py-2 rounded hover:bg-[var(--accent-1)] transition-colors"
+        onClick={() => setShouldRequestTrain(true)}
+        disabled={!selectedTrainingFiles || !selectedTargetLabelsFile || loading}
+      >
+        Train Model
+      </button>
 
       {loading && <p>Training model...</p>}
       {!loading && trainResponse && (

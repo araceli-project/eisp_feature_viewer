@@ -121,7 +121,7 @@ export default function GenerateSelectionVisualization({
             container.appendChild(selectedRendered);
           }
         }
-        if (featureData.shap_results) {
+        if (featureData.shap_results  && Object.keys(featureData.shap_results).length > 0) {
           const shapSvgElement = renderShapPlotSelectedPoints(
             featureData,
             filteredSelectedIndices,
