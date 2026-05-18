@@ -4,19 +4,19 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8333:8333"
     expose:
-      - "8000"
+      - "8333"
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BACKEND_URL: http://localhost:8000
+        NEXT_PUBLIC_BACKEND_URL: http://localhost:8333
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_BACKEND_URL: http://localhost:8000
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:8333
     depends_on:
       - backend

@@ -9,7 +9,7 @@ export type FeaturesResponse = {
 
 function getBackendBaseUrl(): string {
   const configuredBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.trim();
-  return (configuredBackendUrl || "http://localhost:8000").replace(/\/+$/, "");
+  return (configuredBackendUrl || "http://localhost:8333").replace(/\/+$/, "");
 }
 
 function postMultipartWithXhr(url: string, body: FormData): Promise<string> {
